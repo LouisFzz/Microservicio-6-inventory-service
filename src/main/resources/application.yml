@@ -1,0 +1,23 @@
+server:
+  port: 8003
+
+spring:
+  application:
+    name: inventory-service
+  datasource:
+    url: jdbc:postgresql://ep-billowing-smoke-am0flkp9-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require
+    username: neondb_owner
+    password: npg_AuNS3y9mJrjc
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# Alertas de inventario
+inventory:
+  low-stock-threshold: 10
