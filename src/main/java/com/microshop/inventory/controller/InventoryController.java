@@ -2,7 +2,6 @@ package com.microshop.inventory.controller;
 
 import com.microshop.inventory.model.Inventory;
 import com.microshop.inventory.service.InventoryService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,11 +9,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventory")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*") // Para desarrollo, permitir peticiones desde el front
 public class InventoryController {
 
     private final InventoryService inventoryService;
+
+    public InventoryController(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
 
     @GetMapping("/{productId}")
     public ResponseEntity<Inventory> getStock(@PathVariable Long productId) {

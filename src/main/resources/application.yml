@@ -1,13 +1,12 @@
-server:
-  port: 8003
-
 spring:
+  config:
+    import: "optional:file:.env[.properties]"
   application:
     name: inventory-service
   datasource:
-    url: jdbc:postgresql://ep-billowing-smoke-am0flkp9-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require
-    username: neondb_owner
-    password: npg_AuNS3y9mJrjc
+    url: ${DATABASE_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -22,6 +21,9 @@ spring:
     port: 5672
     username: ${RABBITMQ_USER:guest}
     password: ${RABBITMQ_PASSWORD:guest}
+
+server:
+  port: ${PORT:8003}
 
 # Alertas de inventario
 inventory:

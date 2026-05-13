@@ -2,8 +2,8 @@ package com.microshop.inventory.service;
 
 import com.microshop.inventory.model.Inventory;
 import com.microshop.inventory.repository.InventoryRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,11 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class InventoryService {
 
+    private static final Logger log = LoggerFactory.getLogger(InventoryService.class);
     private final InventoryRepository inventoryRepository;
+
+    public InventoryService(InventoryRepository inventoryRepository) {
+        this.inventoryRepository = inventoryRepository;
+    }
 
     public Optional<Inventory> getStockByProductId(Long productId) {
         return inventoryRepository.findByProductId(productId);
@@ -28,10 +31,7 @@ public class InventoryService {
     @Transactional
     public Inventory updateStock(Long productId, Integer quantity) {
         Inventory inventory = inventoryRepository.findByProductId(productId)
-                .orElse(Inventory.builder()
-                        .productId(productId)
-                        .lowStockThreshold(10) // Default threshold
-                        .build());
+                .orElse(new Inventory(productId, 0, 10));
         
         inventory.setQuantity(quantity);
         return inventoryRepository.save(inventory);
@@ -50,7 +50,6 @@ public class InventoryService {
         
         if (inventory.getQuantity() <= inventory.getLowStockThreshold()) {
             log.warn("ALERTA: Stock bajo para el producto {}. Cantidad actual: {}", productId, inventory.getQuantity());
-            // Aquí se integraría con notification-service en el futuro
         }
 
         return inventoryRepository.save(inventory);
